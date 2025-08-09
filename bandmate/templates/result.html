@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BandMate — Results</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head><body><div class="container">
+  <div class="header"><div class="brand">BandMate</div><div class="badge">Results</div></div>
+  <div class="card">
+    <form action="{{ url_for('analyze') }}" method="post">
+      <input type="hidden" name="task_type" value="{{ task_type }}"/>
+      <input type="hidden" name="student_name" value="{{ student_name }}"/>
+      <input type="hidden" name="teacher_notes" value="{{ teacher_notes }}"/>
+      <input type="hidden" name="w_task" value="1.0"/>
+      <input type="hidden" name="w_coh" value="1.0"/>
+      <input type="hidden" name="w_lex" value="1.0"/>
+      <input type="hidden" name="w_gra" value="1.0"/>
+      <label>Extracted Text (edit before analysis):</label>
+      <textarea id="extracted_text" name="extracted_text" rows="14">{{ extracted_text }}</textarea>
+      <div class="actions">
+        <button type="submit">Generate/Regenerate Feedback</button>
+        <a href="{{ url_for('index') }}"><button type="button">Start Over</button></a>
+      </div>
+    </form>
+  </div>
+  {% if feedback %}
+  <div class="card" style="margin-top:16px;">
+    <h2>Feedback</h2>
+    <pre>{{ feedback.summary }}</pre>
+    <h3>Band Estimates</h3>
+    <ul>
+      <li>Task Response/Achievement: <strong>{{ feedback.bands.task }}</strong></li>
+      <li>Coherence & Cohesion: <strong>{{ feedback.bands.coherence }}</strong></li>
+      <li>Lexical Resource: <strong>{{ feedback.bands.lexical }}</strong></li>
+      <li>Grammatical Range & Accuracy: <strong>{{ feedback.bands.grammar }}</strong></li>
+      <li>Overall (weighted): <strong>{{ feedback.bands.overall }}</strong></li>
+    </ul>
+    <h3>Actionable Suggestions</h3>
+    <pre>{{ feedback.actions }}</pre>
+    <div class="actions">
+      <form action="{{ url_for('download_docx') }}" method="post" style="display:inline;">
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+        <input type="hidden" name="task_type" value="{{ task_type }}"/>
+        <input type="hidden" name="extracted_text" value="{{ extracted_text | replace('\n', '&#10;') }}"/>
+        <input type="hidden" name="feedback" value="{{ feedback | tojson }}"/>
+        <button type="submit">Download DOCX</button>
+      </form>
+      <form action="{{ url_for('download_pdf') }}" method="post" style="display:inline;">
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+        <input type="hidden" name="task_type" value="{{ task_type }}"/>
+        <input type="hidden" name="extracted_text" value="{{ extracted_text | replace('\n', '&#10;') }}"/>
+        <input type="hidden" name="feedback" value="{{ feedback | tojson }}"/>
+        <button type="submit">Download PDF</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div></body></html>
