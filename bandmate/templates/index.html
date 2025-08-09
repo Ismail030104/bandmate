@@ -1,59 +1,62 @@
 <!doctype html>
-<html><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BandMate — IELTS Writing Feedback</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-<script defer src="{{ url_for('static', filename='app.js') }}"></script>
-</head><body><div class="container">
-  <div class="header"><div class="brand">BandMate</div><div class="badge">IELTS Writing</div></div>
-  <div class="card">
-    <h2>Single Submission</h2>
-    <form action="{{ url_for('process') }}" method="post" enctype="multipart/form-data">
-      <label>Upload photo/scan (PNG/JPG):</label>
-      <input type="file" name="images" accept="image/*" multiple required/>
-      <div class="grid">
-        <div><label>Task Type:</label>
-          <select name="task_type" required>
-            <option value="auto">Auto-detect</option>
-            <option value="Task 1">Task 1 (Academic/GT)</option>
-            <option value="Task 2">Task 2 (Essay)</option>
-          </select>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>BandMate — IELTS Writing Feedback</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">BandMate</div>
+      <div class="badge">IELTS Writing</div>
+    </div>
+
+    <div class="card">
+      <h2>Single Submission</h2>
+
+      <!-- Hidden file input (camera/gallery) -->
+      <input id="photoInput" type="file" name="images" accept="image/*" capture="environment" hidden multiple>
+
+      <form action="{{ url_for('process') }}" method="post" enctype="multipart/form-data" id="mainForm">
+        <label>Upload photo/scan (PNG/JPG):</label>
+
+        <div class="actions">
+          <button type="button" id="takePhotoBtn">Take Photo</button>
+          <button type="button" class="ghost" id="pickFromGalleryBtn">Choose from Gallery</button>
+          <span id="fileCount" class="note"></span>
         </div>
-        <div><label>Student Name (optional):</label>
-          <input type="text" name="student_name" placeholder="e.g., Jane Doe"/>
+
+        <div id="thumbs" class="thumbs"></div>
+
+        <div class="grid">
+          <div>
+            <label>Task Type:</label>
+            <select name="task_type" required>
+              <option value="auto">Auto-detect</option>
+              <option value="Task 1">Task 1 (Academic/GT)</option>
+              <option value="Task 2">Task 2 (Essay)</option>
+            </select>
+          </div>
+          <div>
+            <label>Student Name (optional):</label>
+            <input type="text" name="student_name" placeholder="e.g., Jane Doe">
+          </div>
         </div>
-      </div>
-      <label>Notes for the model (optional):</label>
-      <textarea name="teacher_notes" rows="3" placeholder="Anything specific to focus on?"></textarea>
-      <div class="actions">
-        <button type="submit">Extract & Analyze</button>
-        <button type="button" class="ghost" id="startCamBtn">Start Camera</button>
-        <button type="button" class="ghost" id="stopCamBtn">Stop Camera</button>
-        <button type="button" class="ghost" id="snapBtn">Capture Page</button>
-      </div>
-    </form>
+
+        <label>Notes for the model (optional):</label>
+        <textarea name="teacher_notes" rows="3" placeholder="Anything specific to focus on?"></textarea>
+
+        <div class="actions">
+          <button type="submit">Extract & Analyze</button>
+          <button type="button" class="ghost" id="clearPhotosBtn">Clear Photos</button>
+        </div>
+        <div class="note">Tip: Good light, flat page, avoid shadows for best OCR.</div>
+      </form>
+    </div>
   </div>
-  <div class="card" style="margin-top:16px;">
-    <h2>Camera Preview</h2>
-    <video id="camVideo" autoplay playsinline muted></video>
-  </div>
-  <div class="card" style="margin-top:16px;">
-    <h2>Batch Submissions (ZIP)</h2>
-    <form action="{{ url_for('batch') }}" method="post" enctype="multipart/form-data">
-      <label>Upload a .zip where each folder is one student with page images.</label>
-      <input type="file" name="zipfile" accept=".zip" required/>
-      <div class="grid">
-        <div><label>Task Type (batch):</label>
-          <select name="task_type" required>
-            <option value="Task 1">Task 1</option>
-            <option value="Task 2">Task 2</option>
-          </select>
-        </div>
-        <div><label>Notes (apply to all):</label>
-          <input type="text" name="teacher_notes" placeholder="optional"/>
-        </div>
-      </div>
-      <div class="actions"><button type="submit">Run Batch</button></div>
-    </form>
-  </div>
-</div></body></html>
+</body>
+</html>
+
