@@ -1,62 +1,45 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>BandMate — IELTS Writing Feedback</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BandMate - Camera Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="brand">BandMate</div>
-      <div class="badge">IELTS Writing</div>
-    </div>
+    <div class="container">
+        <header>
+            <h1>BandMate</h1>
+            <p class="subtitle">Quick IELTS Writing Feedback</p>
+        </header>
 
-    <div class="card">
-      <h2>Single Submission</h2>
+        <form action="/process" method="POST" enctype="multipart/form-data" class="card">
+            
+            <!-- Take Photo Button -->
+            <label for="photoInput" class="btn">📷 Take Photo / Upload</label>
+            <input id="photoInput" type="file" name="images" accept="image/*" capture="environment" multiple>
 
-      <!-- Hidden file input (camera/gallery) -->
-      <input id="photoInput" type="file" name="images" accept="image/*" capture="environment" hidden multiple>
+            <!-- Preview Area -->
+            <div id="preview" class="image-preview"></div>
 
-      <form action="{{ url_for('process') }}" method="post" enctype="multipart/form-data" id="mainForm">
-        <label>Upload photo/scan (PNG/JPG):</label>
-
-        <div class="actions">
-          <button type="button" id="takePhotoBtn">Take Photo</button>
-          <button type="button" class="ghost" id="pickFromGalleryBtn">Choose from Gallery</button>
-          <span id="fileCount" class="note"></span>
-        </div>
-
-        <div id="thumbs" class="thumbs"></div>
-
-        <div class="grid">
-          <div>
-            <label>Task Type:</label>
-            <select name="task_type" required>
-              <option value="auto">Auto-detect</option>
-              <option value="Task 1">Task 1 (Academic/GT)</option>
-              <option value="Task 2">Task 2 (Essay)</option>
+            <label for="taskType">Task Type:</label>
+            <select id="taskType" name="task_type">
+                <option value="auto">Auto-detect</option>
+                <option value="Task 1">Task 1</option>
+                <option value="Task 2">Task 2</option>
             </select>
-          </div>
-          <div>
-            <label>Student Name (optional):</label>
-            <input type="text" name="student_name" placeholder="e.g., Jane Doe">
-          </div>
-        </div>
 
-        <label>Notes for the model (optional):</label>
-        <textarea name="teacher_notes" rows="3" placeholder="Anything specific to focus on?"></textarea>
+            <label for="studentName">Student Name (optional):</label>
+            <input type="text" id="studentName" name="student_name" placeholder="e.g., Jane Doe">
 
-        <div class="actions">
-          <button type="submit">Extract & Analyze</button>
-          <button type="button" class="ghost" id="clearPhotosBtn">Clear Photos</button>
-        </div>
-        <div class="note">Tip: Good light, flat page, avoid shadows for best OCR.</div>
-      </form>
+            <label for="teacherNotes">Notes for the model (optional):</label>
+            <textarea id="teacherNotes" name="teacher_notes" placeholder="Anything specific to focus on?"></textarea>
+
+            <button type="submit" class="btn primary">Extract & Analyze</button>
+        </form>
     </div>
-  </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
 
